@@ -1,0 +1,36 @@
+<head>
+    <title>MegaLab</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+
+
+    <canvas id="canvas"></canvas>
+    <div id='chat'>
+        <div id="content"></div>
+        <div class="controls">
+            <input style="width:350px;" id="field" class="field">
+            <input type="button" value="send" id="send" class="send">
+        </div>
+    </div>
+
+
+
+
+    <script src="http://127.0.0.1:3700/socket.io/socket.io.js">
+    </script>
+
+    <script>
+    var socket = io.connect('127.0.0.1:3700');
+    socket.on('news', function(data) {
+        console.log(data);
+        socket.emit('my other event', {
+            my: 'data'
+        });
+    });
+    </script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="chat.js"></script>
+
+</body>
