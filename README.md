@@ -7,15 +7,16 @@ A social sprite-animated interface
 
 installation :
 
-'npm install' on root folder ton install node.js, jade ( for future easy front developpement ), and express.js
-it works with the file : package.json to list dependencies.
+                -   'npm install' on root folder 
+                
+                it works with the file : package.json to list dependencies.
 
 Launch : 
 
-'node index.js'   ,  the app is pre-configured to run on : 127.0.0.1 on port 3700. (127.0.0.1:3700).
-
-
-To change port and ip local adress :
+                'node index.js'   ,  the app is pre-configured to run on : 127.0.0.1 on port 3700. (127.0.0.1:3700).
+                
+                
+                To change port and ip local adress :
 
 
         example for port 4200, on your local network ip adress '192.168.1.42 :
