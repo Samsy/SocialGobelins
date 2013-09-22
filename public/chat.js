@@ -25,8 +25,8 @@ $('#chat form').submit(function(e) {
 
     var text = $('#field').val();
 
-    socket.emit('send', { message: text });
-    
+    socket.emit('send', { message: text, user: heroNumber });
+
     $('#field').val('');
 });
  

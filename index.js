@@ -8,6 +8,9 @@ var gamers = 0;
 var heronumber = 0;
 var numberOfSockets = 0;
 
+
+// General data
+
 var jsonInfo = {
 
     "sprites": [
@@ -18,7 +21,15 @@ var jsonInfo = {
         "sprites/sprite-Samsy.png"
 
     ],
-
+    // pour l'instant l'user est affecté selon l'ordre de connexion
+    "usernames": [
+        "Lowki93",
+        "Sylvar",
+        "Lory",
+        "Leo",
+        "Samsy"
+    ],
+    // dernières positions enregistrées pour chaque user
     "positions": [],
 
     "gamers": 0,
@@ -62,7 +73,7 @@ io.sockets.on('connection', function(socket) {
 
 	// envoi du premier message du chat.
     socket.emit('message', {
-        message: 'Bienvenue au Chat Gobelins'
+        message: '<em>Bienvenue au Chat Gobelins</em>'
     });
 
 
@@ -70,6 +81,7 @@ io.sockets.on('connection', function(socket) {
 
     // envoi du message en broadcast lorsque le bouton send du chat est activé.
     socket.on('send', function(data) {
+        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
         io.sockets.emit('message', data);
     });
 
@@ -79,7 +91,7 @@ io.sockets.on('connection', function(socket) {
 
         // on enregistre la dernière position connue.
         jsonInfo.positions[data.heronumber] = data.x;
-        
+
         io.sockets.emit('moveFromServer', data);
     });
 
