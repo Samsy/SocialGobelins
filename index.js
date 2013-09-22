@@ -6,7 +6,7 @@ var port = 3700;
 var heroPosx;
 var gamers = 0;
 var heronumber = 0;
-var numberOfSockets;
+var numberOfSockets = 0;
 
 var jsonInfo = {
 
@@ -19,7 +19,7 @@ var jsonInfo = {
 
     ],
 
-    "gamers": 3,
+    "gamers": 1,
 
     "heronumber": 1
 };
@@ -31,10 +31,28 @@ app.use(express.static(__dirname + '/public'));
 
 // socket io qui ecoute le port déclaré.
 var io = require('socket.io').listen(app.listen(port));
+
+// uniquement erreurs et warnings
+io.set('log level', 1);
+
+
 console.log("Listening on port " + port);
 
+
 // lors de la connection de l'utilisateur 
+
 io.sockets.on('connection', function(socket) {
+
+    numberOfSockets++;
+
+    console.log('New connection : sending json data');
+
+    // la valeur gamers met a jour le nombre de personne connecté 
+    jsonInfo.gamers = Object.keys(io.connected).length;
+
+    console.log('Now there are '+jsonInfo.gamers+' users connected.');
+
+    socket.emit('Id-Unique', Object.keys(io.open).length);
 
 	//envoi en broadcast du fichier json info.
 	io.sockets.emit('jsonInfo', jsonInfo);
@@ -44,32 +62,31 @@ io.sockets.on('connection', function(socket) {
     socket.emit('message', {
         message: 'Bienvenue au Chat Gobelins'
     });
+
+
+    /** LISTENERS **/
+
     // envoi du message en broadcast lorsque le bouton send du chat est activé.
     socket.on('send', function(data) {
         io.sockets.emit('message', data);
-        console.log("send");
     });
 
-    // la valeur gamers met a jour le nombre de personne connecté 
-    jsonInfo.gamers = Object.keys(io.connected).length;
 
-    socket.emit('Id-Unique', Object.keys(io.open).length);
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
     socket.on('move', function(data) {
-        heroPosx = data.x;
         io.sockets.emit('moveFromServer', data);
-
     });
 
 
     // deconnection des utilisateurs.
     socket.on('disconnect', function() {
 
+        numberOfSockets--;
 
-        console.log('user disconnected');
+        console.log('User disconnected');
 
         jsonInfo.gamers = Object.keys(io.open).length;
-        console.log(Object.keys(io.open).length);
+        console.log("Now there are "+Object.keys(io.open).length+" users connected.");
 
 
         socket.emit('Id-Unique', Object.keys(io.connected).length);

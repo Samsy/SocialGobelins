@@ -1,6 +1,14 @@
 <head>
     <title>MegaLab</title>
     <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="http://192.168.0.10:3700/socket.io/socket.io.js">
+    </script>
+
+    <script>
+        var socket = io.connect('http://192.168.0.10:3700');
+    </script>
+
 </head>
 
 <body>
@@ -18,19 +26,9 @@
 
 
 
-    <script src="http://127.0.0.1:3700/socket.io/socket.io.js">
-    </script>
-
-    <script>
-    var socket = io.connect('127.0.0.1:3700');
-    socket.on('news', function(data) {
-        console.log(data);
-        socket.emit('my other event', {
-            my: 'data'
-        });
-    });
-    </script>
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="chat.js"></script>
+    
+    <script type="text/javascript" src="script.js" defer="defer"></script>
+    <script type="text/javascript" src="socket.js" defer="defer" ></script>
+    <script type="text/javascript" src="chat.js" defer="defer" ></script>
 
 </body>
