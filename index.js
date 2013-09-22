@@ -19,7 +19,9 @@ var jsonInfo = {
 
     ],
 
-    "gamers": 1,
+    "positions": [],
+
+    "gamers": 0,
 
     "heronumber": 1
 };
@@ -74,6 +76,10 @@ io.sockets.on('connection', function(socket) {
 
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
     socket.on('move', function(data) {
+
+        // on enregistre la dernière position connue.
+        jsonInfo.positions[data.heronumber] = data.x;
+        
         io.sockets.emit('moveFromServer', data);
     });
 
@@ -83,7 +89,7 @@ io.sockets.on('connection', function(socket) {
 
         numberOfSockets--;
 
-        console.log('User disconnected');
+        console.log('User disconnected. ');
 
         jsonInfo.gamers = Object.keys(io.open).length;
         console.log("Now there are "+Object.keys(io.open).length+" users connected.");

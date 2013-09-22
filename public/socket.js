@@ -33,6 +33,7 @@ socket.on('Id-Unique', function(data) {
 });
 
 
+/* General information on players broadcasted by server */
 
 socket.on('jsonInfo', function(data) {
     
@@ -61,10 +62,13 @@ socket.on('jsonInfo', function(data) {
         var spriteRightAnim = new Animation(spriteTilesArray[i], ['0,0', '1,0', '2,0'], 100);
         spriteRightAnimArray.push(spriteRightAnim);
 
+        // si position enregistrée, on la récupère sinon par défaut au milieu de la scène.
+        var startPosition = jsonInfos.positions[i] ? jsonInfos.positions[i] : canvas.width / 2;
+
         var player = new Sprite({
             'left': spriteLeftAnimArray[i],
             'right': spriteRightAnimArray[i]
-        }, 'right', 100 + (i), canvas.height / 2, 41.5, 41.5, 150);
+        }, 'right', startPosition, canvas.height / 2, 41.5, 41.5, 150);
 
         playerArray.push(player);
     }
