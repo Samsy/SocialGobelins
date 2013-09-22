@@ -3,7 +3,6 @@
 
 var messages = [];
 
-var field = document.getElementById("field");
 var sendButton = document.getElementById("send");
 var content = document.getElementById("content");
 
@@ -20,12 +19,15 @@ socket.on('message', function (data) {
     }
 });
 
-sendButton.onclick = function() {
-    var text = field.value;
+$('#chat form').submit(function(e) {
+
+    e.preventDefault(); // avoid form default submission
+
+    var text = $('#field').val();
 
     socket.emit('send', { message: text });
-    console.log('blabla');
-    field.value = "";
-};
+    
+    $('#field').val('');
+});
  
 

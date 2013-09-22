@@ -20,11 +20,14 @@
 
 
     <canvas id="canvas"></canvas>
+
     <div id='chat'>
         <div id="content"></div>
         <div class="controls">
+            <form action="#" method="post" >
             <input style="width:350px;" id="field" class="field">
-            <input type="button" value="send" id="send" class="send">
+            <input type="submit" value="Send !" id="send" class="send">
+        </form>
         </div>
     </div>
 
@@ -32,6 +35,7 @@
 
 
     
+    <script type="text/javascript" src="jquery.js" defer="defer"></script>
     <script type="text/javascript" src="script.js" defer="defer"></script>
     <script type="text/javascript" src="socket.js" defer="defer" ></script>
     <script type="text/javascript" src="chat.js" defer="defer" ></script>
