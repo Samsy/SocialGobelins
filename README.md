@@ -5,43 +5,46 @@ A social sprite-animated interface
 
 
 
-installation :
+##Installation :
 
-                -   'npm install' on root folder 
-                
-                it works with the file : package.json to list dependencies.
+Pour Windows, utiliser l'interpréteur Node.js. Pour Linux/Mac OS X, utiliser la console directement.
 
-Launch : 
+Se rendre dans le dossier du projet et installer les dépendances avec npm :
 
-                'node index.js'   ,  the app is pre-configured to run on : 127.0.0.1 on port 3700. (127.0.0.1:3700).
-                
-                
-                To change port and ip local adress :
+```npm install```
 
+##Lancer l'application :
 
-        example for port 4200, on your local network ip adress '192.168.1.42 :
+```node ./index.js```
 
+Par défaut les requêtes sont écoutées sur le port 3700 et sur l'adresse locale (127.0.0.1). Pour modifier le port d'écoute, modifier le fichier index.js :
 
+```
+var port = 4200;
+``` 
+        
+Pour utiliser l'application avec d'autres postes du réseau, modifier l'adresse du serveur dans les fichiers envoyés au client,
+par exemple si l'application tourne sur le poste ayant l'ip 192.168.1.42 (et écoute sur le port 4200) :
+        
+####public/index.html :   
+        
+```html
+<script src="http://192.168.1.42:4200/socket.io/socket.io.js"></script>
+```
+```js
 
-        index.js :
-        
-        ...
-        
-        var port = 4200;
-        
-        
-        
-        
+//...
+var socket = io.connect('http://192.168.1.42:4200');
+//...
+```
 
-        public/index.html :   
+####public/chat.js : 
         
-        ...
-        <script src="http://192.168.1.42:4200/socket.io/socket.io.js">
-        ...
-        var socket = io.connect('1192.168.1.42:4200');
-        
-        
-    
+```js
+//...
+var socket = io.connect('http://192.168.1.42:4200');
+//...
+ ```
 
 
 
