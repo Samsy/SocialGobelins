@@ -1,4 +1,5 @@
 
+/***** CHAT *****/
 
 var messages = [];
 
@@ -21,6 +22,7 @@ socket.on('message', function (data) {
 
 sendButton.onclick = function() {
     var text = field.value;
+
     socket.emit('send', { message: text });
     console.log('blabla');
     field.value = "";

@@ -28,16 +28,17 @@ socket.on('moveFromServer', function(data) {
 /* Emitted to tell the player ID */
 
 socket.on('Id-Unique', function(data) {
-
+    console.log("Got unique ID from server : "+data);
     heroNumber = data - 1;
-    console.log(heroNumber);
 });
 
 
 
 socket.on('jsonInfo', function(data) {
+    
 
     jsonInfos = data;
+
     console.log(data);
 
     playerArray = new Array();
@@ -47,9 +48,9 @@ socket.on('jsonInfo', function(data) {
 
     connectedUser = jsonInfos.gamers;
 
-    console.log("log :" + connectedUser + " joueurs connecté");
+    console.log("Got json players info. "+connectedUser+" users connected.");
 
-    for (var i = 0; i <= connectedUser; i++) {
+    for (var i = 0; i < connectedUser; i++) {
 
         var spriteTiles = new Tileset(jsonInfos.sprites[i], 41.5, 41.5);
         spriteTilesArray.push(spriteTiles);
@@ -68,6 +69,5 @@ socket.on('jsonInfo', function(data) {
         playerArray.push(player);
     }
 
-    console.log(spriteLeftAnim);
     setInterval(main, 10);
 });

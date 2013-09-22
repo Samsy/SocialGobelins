@@ -15,7 +15,6 @@ var heroNumber;
 var posxOrigin;
 var connectedUser = 0;
 
-console.log('in');
 // instantiate the bubble
 drawing = new Image();
 drawing.src = "bulles/0.png";

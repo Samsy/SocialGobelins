@@ -2,11 +2,16 @@
     <title>MegaLab</title>
     <link rel="stylesheet" type="text/css" href="main.css">
 
-    <script src="http://192.168.0.10:3700/socket.io/socket.io.js">
-    </script>
+    <!-- To use a fully qualified net address replace by : -->
+    <!-- <script src="http://your.ip.adress.here:3700/socket.io/socket.io.js"></script> -->
+
+    <script src="http://192.168.0.10:3700/socket.io/socket.io.js"></script>
 
     <script>
-        var socket = io.connect('http://192.168.0.10:3700');
+        var socket = io.connect('http://127.0.0.1:3700');
+
+        // To use a fully qualified net address replace by :
+        // var socket = io.connect('http://your.ip.adress.here:3700');
     </script>
 
 </head>
