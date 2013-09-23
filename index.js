@@ -59,21 +59,29 @@ io.of('/map').on('connection', function(socket) {
 
     console.log('/map : New connection : sending json data');
 
+    var id =  io.of('/map').clients().length;
+
     // la valeur gamers met a jour le nombre de personne connecté 
-    jsonInfo.gamers = io.of('/map').clients().length;
+    jsonInfo.gamers = id;
+    name = jsonInfo.usernames[id-1];
 
-    console.log('/map : Now there are '+jsonInfo.gamers+' users connected.');
+    socket.set('user', {
+        id: id,
+        name: name
+    }, function() {
 
-    socket.emit('Id-Unique', io.of('/map').clients().length);
+        console.log('/map : '+name+' connected. Now there are '+jsonInfo.gamers+' users connected.');
 
-	//envoi en broadcast du fichier json info.
-	io.of('/map').emit('jsonInfo', jsonInfo);
+        socket.emit('Id-Unique', id);
+
+        //envoi en broadcast du fichier json info.
+        io.of('/map').emit('jsonInfo', jsonInfo);
+
+    });
 
 
-	
 
     /** LISTENERS **/
-
    
 
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
@@ -82,14 +90,17 @@ io.of('/map').on('connection', function(socket) {
         // on enregistre la dernière position connue.
         jsonInfo.positions[data.heronumber] = data.x;
 
-        io.of('/map').emit('moveFromServer', data);
+        io.of('/map').volatile.emit('moveFromServer', data);
     });
 
 
     // deconnection des utilisateurs.
     socket.on('disconnect', function() {
 
-        console.log('/map : User disconnected. ');
+        socket.get('user', function(err, user) {
+            console.log('/map : User '+user.name+' disconnected. ');
+        });
+       
 
         jsonInfo.gamers = Object.keys(io.open).length;
         console.log("Now there are "+Object.keys(io.open).length+" users connected.");
