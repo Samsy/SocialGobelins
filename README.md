@@ -3,6 +3,7 @@ SocialGobelins
 
 A social sprite-animated interface
 
+(NOTE : Pour tester la branche "optimization/clustering" - qui permet d'utiliser tous les coeurs du processeur, il faut lancer l'app sous un système Linux avec redis-server installé).
 
 
 ##Installation :
