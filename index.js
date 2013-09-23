@@ -124,9 +124,16 @@ io.of('/chat').on('connection', function(socket) {
 
      // envoi du message en broadcast lorsque le bouton send du chat est activé.
     socket.on('send', function(data) {
-        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
+        data.message = '<b>'+data.from+'</b> : '+data.message;
         console.log('/chat : message from user '+jsonInfo.usernames[data.user]);
         io.of('/chat').emit('message', data);
+    });
+
+    // message privé : broadcast également mais seul le client concerné doit traiter le message.
+    socket.on('private-message', function(data) {
+        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
+        console.log('/chat : message from user '+data.from+' to user '+data.to);
+        io.of('/chat').emit('private-message', data);
     });
 
 });

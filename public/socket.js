@@ -47,6 +47,8 @@ socket.on('jsonInfo', function(data) {
     spriteRightAnimArray = new Array();
     spriteTilesArray = new Array();
 
+    username = jsonInfos.usernames[heroNumber];
+
     connectedUser = jsonInfos.gamers;
 
     console.log("Got json players info. "+connectedUser+" users connected.");
