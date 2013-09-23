@@ -52,39 +52,29 @@ io.set('log level', 1);
 console.log("Listening on port " + port);
 
 
+// Socket : MOVING
 // lors de la connection de l'utilisateur 
 
-io.sockets.on('connection', function(socket) {
+io.of('/map').on('connection', function(socket) {
 
-    numberOfSockets++;
-
-    console.log('New connection : sending json data');
+    console.log('/map : New connection : sending json data');
 
     // la valeur gamers met a jour le nombre de personne connecté 
-    jsonInfo.gamers = Object.keys(io.connected).length;
+    jsonInfo.gamers = io.of('/map').clients().length;
 
-    console.log('Now there are '+jsonInfo.gamers+' users connected.');
+    console.log('/map : Now there are '+jsonInfo.gamers+' users connected.');
 
-    socket.emit('Id-Unique', Object.keys(io.open).length);
+    socket.emit('Id-Unique', io.of('/map').clients().length);
 
 	//envoi en broadcast du fichier json info.
-	io.sockets.emit('jsonInfo', jsonInfo);
+	io.of('/map').emit('jsonInfo', jsonInfo);
 
 
-	// envoi du premier message du chat.
-    socket.emit('message', {
-        message: '<em>Bienvenue au Chat Gobelins</em>'
-    });
-
+	
 
     /** LISTENERS **/
 
-    // envoi du message en broadcast lorsque le bouton send du chat est activé.
-    socket.on('send', function(data) {
-        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
-        io.sockets.emit('message', data);
-    });
-
+   
 
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
     socket.on('move', function(data) {
@@ -92,23 +82,17 @@ io.sockets.on('connection', function(socket) {
         // on enregistre la dernière position connue.
         jsonInfo.positions[data.heronumber] = data.x;
 
-        io.sockets.emit('moveFromServer', data);
+        io.of('/map').emit('moveFromServer', data);
     });
 
 
     // deconnection des utilisateurs.
     socket.on('disconnect', function() {
 
-        numberOfSockets--;
-
-        console.log('User disconnected. ');
+        console.log('/map : User disconnected. ');
 
         jsonInfo.gamers = Object.keys(io.open).length;
         console.log("Now there are "+Object.keys(io.open).length+" users connected.");
-
-
-        socket.emit('Id-Unique', Object.keys(io.connected).length);
-        io.sockets.emit('jsonInfo', jsonInfo);
 
 
     });
@@ -117,3 +101,21 @@ io.sockets.on('connection', function(socket) {
 });
 
 
+// SOCKET : CHAT
+
+io.of('/chat').on('connection', function(socket) {
+
+    // envoi du premier message du chat.
+    socket.emit('message', {
+        message: '<em>Bienvenue au Chat Gobelins</em>'
+    });
+
+
+     // envoi du message en broadcast lorsque le bouton send du chat est activé.
+    socket.on('send', function(data) {
+        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
+        console.log('/chat : message from user '+jsonInfo.usernames[data.user]);
+        io.of('/chat').emit('message', data);
+    });
+
+});

@@ -1,12 +1,14 @@
 
 /***** CHAT *****/
 
+var chat = io.connect('http://'+ADDR+':'+PORT+'/chat');
+
 var messages = [];
 
 var sendButton = document.getElementById("send");
 var content = document.getElementById("content");
 
-socket.on('message', function (data) {
+chat.on('message', function (data) {
     if(data.message) {
         messages.push(data.message);
         var html = '';
@@ -25,7 +27,7 @@ $('#chat form').submit(function(e) {
 
     var text = $('#field').val();
 
-    socket.emit('send', { message: text, user: heroNumber });
+    chat.emit('send', { message: text, user: heroNumber });
 
     $('#field').val('');
 });
