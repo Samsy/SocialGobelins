@@ -41,6 +41,14 @@ var jsonInfo = {
 // folder static envoyant les différent fichier script html et css.
 app.use(express.static(__dirname + '/public'));
 
+// clear the console.
+var lines = process.stdout.getWindowSize()[1];
+for(var i = 0; i < lines; i++) {
+    console.log('\r\n');
+}
+
+console.log("\t\t ------------- SOCIAL GOBELINS --------------");
+console.log("\t\t ------------ Real time chat app ------------");
 
 // socket io qui ecoute le port déclaré.
 var io = require('socket.io').listen(app.listen(port));
@@ -124,16 +132,15 @@ io.of('/chat').on('connection', function(socket) {
 
      // envoi du message en broadcast lorsque le bouton send du chat est activé.
     socket.on('send', function(data) {
-        data.message = '<b>'+data.from+'</b> : '+data.message;
-        console.log('/chat : message from user '+jsonInfo.usernames[data.user]);
-        io.of('/chat').emit('message', data);
+
+        if (data.to) { // message privé
+            console.log('/chat : message from user '+data.from+' to user '+data.to);
+            io.of('/chat').emit('private-message', data);
+        } else {
+            console.log('/chat : message from user '+jsonInfo.usernames[data.user]);
+            io.of('/chat').emit('message', data);   
+        }
     });
 
-    // message privé : broadcast également mais seul le client concerné doit traiter le message.
-    socket.on('private-message', function(data) {
-        data.message = '<b>'+jsonInfo.usernames[data.user]+'</b> : '+data.message;
-        console.log('/chat : message from user '+data.from+' to user '+data.to);
-        io.of('/chat').emit('private-message', data);
-    });
 
 });

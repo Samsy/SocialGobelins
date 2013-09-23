@@ -17,7 +17,19 @@ var username = null;
 */
 function logMessage(data)
 {
-    messages.push(data.message);
+    msg = '';
+
+    if (data.from) {
+        msg += '<strong>'+data.from+'</strong> ';
+        if (data.to) {
+            msg += '<em>(to '+data.to+')</em>';
+        }
+        msg += ' : ';
+    }
+
+    msg += data.message;
+
+    messages.push(msg);
     var html = '';
     for(var i=0; i<messages.length; i++) {
         html += messages[i] + '<br />';
@@ -34,18 +46,20 @@ function logMessage(data)
 
 function parseCommand(command)
 {
-    var matches = command.match(/\/([a-zA-Z0-9_\-]+) ?(.*)/);
+    var matches = command.match(/\/([a-zA-Z0-9_\-]+)(.*)/);
 
     if (matches && matches.length > 0) {
         command = matches[1];
         args = matches[2];
 
+        console.log('Command : '+command);
 
         // private message ? (command is an username)
-        if (command in jsonInfos.usernames) {
+        if (jsonInfos.usernames.indexOf(command) != -1) {
             nick = command;
             text = args;
-            chat.emit('private-message', {
+
+            chat.emit('send', {
                 to: nick,       // dest
                 from: username, // exp (me)
                 message: text,
@@ -89,11 +103,12 @@ chat.on('private-message', function (data) {
 
     // si on est destinataire ou récepteur du message on l'affiche.
 
+    console.log('Private message for '+data.to);
+
     if(data.message && ( data.to == username || data.from == username)) {
         logMessage(data);
-    } else {
-        console.log("There is a problem:", data);
     }
+
 });
 
 $('#chat form').submit(function(e) {
