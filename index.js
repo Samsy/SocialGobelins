@@ -48,7 +48,7 @@ for(var i = 0; i < lines; i++) {
 }
 
 console.log("\t\t ------------- SOCIAL GOBELINS --------------");
-console.log("\t\t ------------ Real time chat app ------------");
+console.log("\t\t ------------ Real time chat app ------------\n");
 
 // socket io qui ecoute le port déclaré.
 var io = require('socket.io').listen(app.listen(port));
@@ -95,11 +95,20 @@ io.of('/map').on('connection', function(socket) {
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
     socket.on('move', function(data) {
 
-        // on enregistre la dernière position connue.
-        jsonInfo.positions[data.heronumber] = data.x;
+        
 
         io.of('/map').volatile.emit('moveFromServer', data);
     });
+
+
+    // juste avant la déconnexion effective, on enregistre la dernière position connue.
+    socket.on('exit', function(data) {
+        // on enregistre la dernière position connue.
+        jsonInfo.positions[data.heronumber] = data.x;
+        socket.get('user', function(err, user) {
+            console.log('/map : User '+user.name+' ready to disconnect. Last position registered at [x: '+data.x+' ]');
+        });
+    })
 
 
     // deconnection des utilisateurs.

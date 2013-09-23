@@ -18,6 +18,14 @@
 
         // To use a fully qualified net address replace by :
         // var socket = io.connect('http://your.ip.adress.here:3700');
+
+
+        window.onunload = function() {
+            socket.emit('exit', {
+                heronumber: heroNumber,
+                x: playerArray[heroNumber].x
+            });
+        }
     </script>
 
 </head>

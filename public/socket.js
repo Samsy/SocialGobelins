@@ -77,3 +77,11 @@ socket.on('jsonInfo', function(data) {
 
     setInterval(main, 10);
 });
+
+
+
+socket.on('disconnect', function() {
+    logMessage({
+        message: "   >> Serveur déconnecté."
+    });
+});
