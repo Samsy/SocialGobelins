@@ -55,16 +55,20 @@ function parseCommand(command)
         console.log('Command : '+command);
 
         // private message ? (command is an username)
-        if (jsonInfos.usernames.indexOf(command) != -1) {
-            nick = command;
-            text = args;
+        for (i = 0 ; i < jsonInfos.usernames.length ; i++) {
+            if (jsonInfos.usernames[i].indexOf(command) != -1 || command == jsonInfos.usernames[i]) {
+                nick = jsonInfos.usernames[i];
+                text = args;
 
-            chat.emit('send', {
-                to: nick,       // dest
-                from: username, // exp (me)
-                message: text,
-                user: heroNumber
-            });
+                chat.emit('send', {
+                    to: nick,       // dest
+                    from: username, // exp (me)
+                    message: text,
+                    user: heroNumber
+                });
+
+                break;
+            }
         }
 
 
@@ -84,7 +88,10 @@ function parseCommand(command)
 
         // quit
         if (command == 'quit' || command == 'exit') {
-            window.close();
+            socket.emit('exit', {
+                heronumber: heroNumber,
+                x: playerArray[heroNumber].x
+            });
         }
     }
             

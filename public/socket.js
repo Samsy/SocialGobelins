@@ -82,6 +82,6 @@ socket.on('jsonInfo', function(data) {
 
 socket.on('disconnect', function() {
     logMessage({
-        message: "   >> Serveur déconnecté."
+        message: "   >> Déconnecté du serveur."
     });
 });

@@ -1,6 +1,9 @@
 var express = require("express");
 var app = express();
 
+var chat = require("./chat.js");
+var db = require("./db.js");
+
 //port d'écoute de l'application
 var port = 3700;
 var heroPosx;
@@ -11,31 +14,7 @@ var numberOfSockets = 0;
 
 // General data
 
-var jsonInfo = {
-
-    "sprites": [
-        "sprites/sprite-lowki93.png",
-        "sprites/sprite-Sylvar.png",
-        "sprites/sprite-Lory.png",
-        "sprites/sprite-leo.png",
-        "sprites/sprite-Samsy.png"
-
-    ],
-    // pour l'instant l'user est affecté selon l'ordre de connexion
-    "usernames": [
-        "Lowki93",
-        "Sylvar",
-        "Lory",
-        "Leo",
-        "Samsy"
-    ],
-    // dernières positions enregistrées pour chaque user
-    "positions": [],
-
-    "gamers": 0,
-
-    "heronumber": 1
-};
+var jsonInfo = db.getJson();
 
 
 // folder static envoyant les différent fichier script html et css.
@@ -94,9 +73,6 @@ io.of('/map').on('connection', function(socket) {
 
     // renvoi de la valeur d'un hero en particulier en broadcast vers tous les client.
     socket.on('move', function(data) {
-
-        
-
         io.of('/map').volatile.emit('moveFromServer', data);
     });
 
@@ -108,6 +84,8 @@ io.of('/map').on('connection', function(socket) {
         socket.get('user', function(err, user) {
             console.log('/map : User '+user.name+' ready to disconnect. Last position registered at [x: '+data.x+' ]');
         });
+
+        socket.disconnect();
     })
 
 
@@ -129,27 +107,4 @@ io.of('/map').on('connection', function(socket) {
 });
 
 
-// SOCKET : CHAT
-
-io.of('/chat').on('connection', function(socket) {
-
-    // envoi du premier message du chat.
-    socket.emit('message', {
-        message: '<em>Bienvenue au Chat Gobelins</em>'
-    });
-
-
-     // envoi du message en broadcast lorsque le bouton send du chat est activé.
-    socket.on('send', function(data) {
-
-        if (data.to) { // message privé
-            console.log('/chat : message from user '+data.from+' to user '+data.to);
-            io.of('/chat').emit('private-message', data);
-        } else {
-            console.log('/chat : message from user '+jsonInfo.usernames[data.user]);
-            io.of('/chat').emit('message', data);   
-        }
-    });
-
-
-});
+chat.start(io, jsonInfo);
